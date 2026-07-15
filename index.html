@@ -24,10 +24,14 @@ display:flex;
 justify-content:center;
 align-items:center;
 
+/* Variables that will be updated by JS */
+--theme-color: #d946ef;
+--theme-color-secondary: #8b5cf6;
+
 background:linear-gradient(-45deg,
+#120524,
 #2d0b59,
-#4f1c8c,
-#4f46e5,
+var(--theme-color-secondary),
 #0f172a);
 
 background-size:400% 400%;
@@ -53,7 +57,7 @@ content:"";
 position:absolute;
 width:700px;
 height:700px;
-background:#9d4edd;
+background: var(--theme-color-secondary);
 filter:blur(180px);
 border-radius:50%;
 opacity:.35;
@@ -67,7 +71,7 @@ content:"";
 position:absolute;
 width:500px;
 height:500px;
-background:#4cc9f0;
+background: var(--theme-color);
 filter:blur(150px);
 border-radius:50%;
 opacity:.3;
@@ -117,8 +121,8 @@ letter-spacing:5px;
 text-shadow:
 
 0 0 15px #fff,
-0 0 30px #d946ef,
-0 0 60px #8b5cf6,
+0 0 30px var(--theme-color),
+0 0 60px var(--theme-color-secondary),
 0 0 90px #38bdf8;
 
 animation:pulse 2s infinite;
@@ -132,9 +136,9 @@ transform:scale(1.06);
 text-shadow:
 
 0 0 20px white,
-0 0 40px #ff80ff,
+0 0 40px var(--theme-color),
 0 0 80px cyan,
-0 0 120px violet;
+0 0 120px var(--theme-color-secondary);
 
 }
 
@@ -199,7 +203,20 @@ transform:translateY(-120vh) scale(1.2);
 
 <script>
 
-const text="Hadjer";
+// 1. Ask user for input on load
+const userName = prompt("Please enter your name:", "Hadjer") || "Hadjer";
+const userColor = prompt("What is your favorite color?", "#d946ef") || "#d946ef";
+
+// Update Title and Typing Text
+document.title = userName;
+const text = userName;
+
+// 2. Apply theme colors dynamically using CSS variables
+document.body.style.setProperty('--theme-color', userColor);
+
+// Create a slightly darker/different version of their color for the second gradient point
+// (If they typed a word like "red", we fallback to a secondary color based on it)
+document.body.style.setProperty('--theme-color-secondary', userColor + "aa"); 
 
 const fonts=[
 
@@ -216,15 +233,15 @@ const fonts=[
 
 ];
 
-const name=document.getElementById("name");
+const nameElement=document.getElementById("name");
 
 let fontIndex=0;
 
 function typeAnimation(){
 
-name.innerHTML="";
+nameElement.innerHTML="";
 
-name.style.fontFamily=fonts[fontIndex];
+nameElement.style.fontFamily=fonts[fontIndex];
 
 let i=0;
 
@@ -232,7 +249,7 @@ let typing=setInterval(()=>{
 
 if(i<text.length){
 
-name.innerHTML=text.substring(0,i+1)+
+nameElement.innerHTML=text.substring(0,i+1)+
 "<span class='cursor'></span>";
 
 i++;
@@ -259,7 +276,7 @@ let erase=setInterval(()=>{
 
 if(i>=0){
 
-name.innerHTML=text.substring(0,i)+
+nameElement.innerHTML=text.substring(0,i)+
 "<span class='cursor'></span>";
 
 i--;
@@ -307,9 +324,10 @@ p.style.animationDelay=Math.random()*8+"s";
 
 p.style.opacity=Math.random();
 
+// Use user's theme color for particles
 p.style.background=
 Math.random()>0.5?
-"#9d4edd":"#4cc9f0";
+userColor : "#ffffff";
 
 document.body.appendChild(p);
 
