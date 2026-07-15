@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Hadjer</title>
+<title>Experience</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Pacifico&family=Dancing+Script:wght@700&family=Lobster&family=Orbitron:wght@700&family=Cinzel:wght@700&family=Playfair+Display:wght@700&family=Satisfy&family=Great+Vibes&family=Audiowide&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Pacifico&family=Dancing+Script:wght@700&family=Lobster&family=Orbitron:wght@700&family=Cinzel:wght@700&family=Playfair+Display:wght@700&family=Satisfy&family=Great+Vibes&family=Audiowide&display=swap" rel="stylesheet">
 
 <style>
 
@@ -29,15 +29,15 @@ align-items:center;
 --theme-color-secondary: #8b5cf6;
 
 background:linear-gradient(-45deg,
-#120524,
-#2d0b59,
+#0b0416,
+#17062e,
 var(--theme-color-secondary),
 #0f172a);
 
 background-size:400% 400%;
 animation:gradientMove 15s ease infinite;
 
-font-family:Poppins,sans-serif;
+font-family: 'Poppins', sans-serif;
 
 }
 
@@ -101,6 +101,107 @@ to{
 transform:translate(-220px,-180px);
 }
 
+}
+
+/* Professional Input Modal */
+#setup-modal {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(15, 23, 42, 0.75);
+backdrop-filter: blur(15px);
+-webkit-backdrop-filter: blur(15px);
+z-index: 100;
+display: flex;
+justify-content: center;
+align-items: center;
+transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+#setup-modal.hidden {
+opacity: 0;
+visibility: hidden;
+pointer-events: none;
+}
+
+.modal-card {
+background: rgba(30, 41, 59, 0.7);
+border: 1px solid rgba(255, 255, 255, 0.1);
+box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+border-radius: 20px;
+padding: 40px;
+width: 90%;
+max-width: 420px;
+text-align: left;
+color: white;
+}
+
+.modal-card h2 {
+font-size: 28px;
+font-weight: 700;
+margin-bottom: 6px;
+background: linear-gradient(45deg, #38bdf8, #d946ef);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+
+.modal-card p {
+font-size: 14px;
+color: #94a3b8;
+margin-bottom: 24px;
+}
+
+.input-group {
+margin-bottom: 20px;
+}
+
+.input-group label {
+display: block;
+font-size: 11px;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 1.5px;
+margin-bottom: 8px;
+color: #cbd5e1;
+}
+
+.input-group input {
+width: 100%;
+padding: 14px 16px;
+background: rgba(15, 23, 42, 0.5);
+border: 1px solid rgba(255, 255, 255, 0.15);
+border-radius: 10px;
+color: white;
+font-family: inherit;
+font-size: 15px;
+transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+outline: none;
+border-color: #38bdf8;
+box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+}
+
+#btn-submit {
+width: 100%;
+padding: 14px;
+background: linear-gradient(135deg, #4f46e5, #9d4edd);
+border: none;
+border-radius: 10px;
+color: white;
+font-weight: 700;
+font-size: 16px;
+cursor: pointer;
+transition: all 0.3s ease;
+margin-top: 10px;
+}
+
+#btn-submit:hover {
+transform: translateY(-2px);
+box-shadow: 0 10px 20px rgba(157, 78, 221, 0.4);
 }
 
 .container{
@@ -195,6 +296,26 @@ transform:translateY(-120vh) scale(1.2);
 </head>
 <body>
 
+<!-- Modern Setup Screen -->
+<div id="setup-modal">
+  <div class="modal-card">
+    <h2>Welcome</h2>
+    <p>Customize your animated identity theme</p>
+    
+    <div class="input-group">
+      <label for="user-name">Your Name</label>
+      <input type="text" id="user-name" placeholder="Enter your name" autocomplete="off" required>
+    </div>
+    
+    <div class="input-group">
+      <label for="user-color">Favorite Color Name</label>
+      <input type="text" id="user-color" placeholder="e.g. Crimson, Teal, Violet, Coral" autocomplete="off" required>
+    </div>
+    
+    <button id="btn-submit">Launch Experience</button>
+  </div>
+</div>
+
 <div class="container">
 
 <div id="name"></div>
@@ -203,20 +324,43 @@ transform:translateY(-120vh) scale(1.2);
 
 <script>
 
-// 1. Ask user for input on load
-const userName = prompt("Please enter your name:", "Hadjer") || "Hadjer";
-const userColor = prompt("What is your favorite color?", "#d946ef") || "#d946ef";
+// Helper: Converts underscores/hyphens to spaces, and capitalizes the first letter of each word
+function cleanAndFormatName(rawName) {
+  if (!rawName) return "Guest";
+  
+  // Replace underscores and hyphens with spaces
+  let cleaned = rawName.replace(/[_-]+/g, ' ');
+  
+  // Capitalize first letter of every word (Title Case)
+  return cleaned
+    .split(' ')
+    .filter(word => word.length > 0)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
 
-// Update Title and Typing Text
-document.title = userName;
-const text = userName;
-
-// 2. Apply theme colors dynamically using CSS variables
-document.body.style.setProperty('--theme-color', userColor);
-
-// Create a slightly darker/different version of their color for the second gradient point
-// (If they typed a word like "red", we fallback to a secondary color based on it)
-document.body.style.setProperty('--theme-color-secondary', userColor + "aa"); 
+// Helper: Safely converts any valid CSS color name (or format) into a real hex color code
+function nameToHex(colorName) {
+  if (!colorName) return "#d946ef"; // fallback default
+  
+  // Create a temporary element to let the browser compute the style
+  const temp = document.createElement("div");
+  temp.style.color = colorName;
+  document.body.appendChild(temp);
+  
+  const resolved = window.getComputedStyle(temp).color;
+  document.body.removeChild(temp);
+  
+  // Parse rgb(r, g, b) or rgba(r, g, b, a) values returned by the browser
+  const match = resolved.match(/\d+/g);
+  if (!match || match.length < 3) return "#d946ef"; 
+  
+  const r = parseInt(match[0]).toString(16).padStart(2, '0');
+  const g = parseInt(match[1]).toString(16).padStart(2, '0');
+  const b = parseInt(match[2]).toString(16).padStart(2, '0');
+  
+  return `#${r}${g}${b}`;
+}
 
 const fonts=[
 
@@ -233,9 +377,9 @@ const fonts=[
 
 ];
 
-const nameElement=document.getElementById("name");
-
+const nameElement = document.getElementById("name");
 let fontIndex=0;
+let text = ""; 
 
 function typeAnimation(){
 
@@ -300,37 +444,61 @@ setTimeout(typeAnimation,500);
 
 }
 
-typeAnimation();
+// Handle Form Submission
+document.getElementById('btn-submit').addEventListener('click', () => {
+  const nameInput = document.getElementById('user-name').value.trim();
+  const colorInput = document.getElementById('user-color').value.trim();
+  
+  // Process the name to remove underscores and capitalize the first letters
+  text = cleanAndFormatName(nameInput);
+  document.title = text;
+  
+  // Convert standard color names into precise hex codes
+  const baseColorHex = nameToHex(colorInput);
+  
+  // Create a secondary darker/semi-transparent accent color from the hex code
+  const secondaryColorHex = baseColorHex + "99"; 
 
+  // Apply properties to CSS variables
+  document.body.style.setProperty('--theme-color', baseColorHex);
+  document.body.style.setProperty('--theme-color-secondary', secondaryColorHex);
+  
+  // Hide the modal with CSS transitions
+  document.getElementById('setup-modal').classList.add('hidden');
+  
+  // Start the animation loops
+  typeAnimation();
+  generateParticles(baseColorHex);
+});
 
-// Floating particles
+// Generate Particles inside a modular function
+function generateParticles(particleColor) {
+  for(let i=0;i<70;i++){
 
-for(let i=0;i<70;i++){
+    const p=document.createElement("div");
 
-const p=document.createElement("div");
+    p.className="particle";
 
-p.className="particle";
+    let size=Math.random()*8+2;
 
-let size=Math.random()*8+2;
+    p.style.width=size+"px";
+    p.style.height=size+"px";
 
-p.style.width=size+"px";
-p.style.height=size+"px";
+    p.style.left=Math.random()*100+"vw";
 
-p.style.left=Math.random()*100+"vw";
+    p.style.animationDuration=(8+Math.random()*12)+"s";
 
-p.style.animationDuration=(8+Math.random()*12)+"s";
+    p.style.animationDelay=Math.random()*8+"s";
 
-p.style.animationDelay=Math.random()*8+"s";
+    p.style.opacity=Math.random();
 
-p.style.opacity=Math.random();
+    p.style.background=
+    Math.random()>0.5?
+    particleColor : "#ffffff";
 
-// Use user's theme color for particles
-p.style.background=
-Math.random()>0.5?
-userColor : "#ffffff";
+    document.body.appendChild(p);
 
-document.body.appendChild(p);
-
+  }
 }
 
 </script>
